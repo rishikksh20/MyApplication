@@ -10,8 +10,9 @@ So whenever we open an image file using this App the audio file which associated
 
 ## XML file:
 Xml file structure is like this:
-
+```
 <nodes>
+
   <node>
     <image>image-url</image>
     <audio>audio-url</audio>
@@ -22,3 +23,4 @@ Xml file structure is like this:
   .
   .
 </nodes>
+```
