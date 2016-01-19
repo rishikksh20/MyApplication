@@ -48,8 +48,8 @@ public class Camera extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cameralayout);
 
-        b1=(Button)findViewById(R.id.button);
-        iv=(ImageView)findViewById(R.id.imageView);
+        b1=(Button)findViewById(R.id.button); // Capture button
+        iv=(ImageView)findViewById(R.id.imageView); // ImageView for captured image
 
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,7 +59,7 @@ public class Camera extends ActionBarActivity {
             }
         });
 
-        b3=(Button)findViewById(R.id.button3);
+        b3=(Button)findViewById(R.id.button3); // Save button
         b3.setEnabled(false);
         record=(Button)findViewById(R.id.button2);
         play=(Button)findViewById(R.id.button4);
@@ -68,7 +68,7 @@ public class Camera extends ActionBarActivity {
         stop.setEnabled(false);
         play.setEnabled(false);
 
-
+        // For recording an audio
         myAudioRecorder=new MediaRecorder();
         myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         myAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
@@ -81,7 +81,7 @@ public class Camera extends ActionBarActivity {
 
 
                 try {
-
+                    // Giving appropriate file name which is same as our image file name
                     outputFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"+imageFileName+".3gp";
                     myAudioRecorder.setOutputFile(outputFile);
                     myAudioRecorder.prepare();
@@ -104,7 +104,7 @@ public class Camera extends ActionBarActivity {
                 Toast.makeText(getApplicationContext(), "Recording started", Toast.LENGTH_LONG).show();
             }
         });
-
+        // Stop audio recording
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,7 +120,7 @@ public class Camera extends ActionBarActivity {
                 Toast.makeText(getApplicationContext(), "Audio recorded successfully",Toast.LENGTH_LONG).show();
             }
         });
-
+        // Play audio recording
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) throws IllegalArgumentException,SecurityException,IllegalStateException {
@@ -148,11 +148,11 @@ public class Camera extends ActionBarActivity {
         });
 
 
-
+        // Save both files
         b3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                // Adding both files entry in the .xml file with appropriate structure
                 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder documentBuilder = null;
                 Document document=null;
@@ -167,18 +167,19 @@ public class Camera extends ActionBarActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                // Getting root node name "nodes"
                 Element root = document.getDocumentElement();
-                // server elements
+                // Create a child name of "nodes" i.e. "node"
                 Element newNode = document.createElement("node");
-
+                // First Child of "node" is "image" tag that contain image url
                 Element imagePath = document.createElement("image");
                 imagePath.appendChild(document.createTextNode(imageFilePath));
                 newNode.appendChild(imagePath);
-
+                // Second Child of "node" is "audio" tag that contain audio url
                 Element audioPath = document.createElement("audio");
                 audioPath.appendChild(document.createTextNode(outputFile));
                 newNode.appendChild(audioPath);
-
+                // Append the node tag to the file
                 root.appendChild(newNode);
                 Toast.makeText(getApplicationContext(), "Save successfully",Toast.LENGTH_LONG).show();
                 Toast.makeText(getApplicationContext(),outputFile+" : "+imageFilePath,Toast.LENGTH_LONG).show();
@@ -196,7 +197,7 @@ public class Camera extends ActionBarActivity {
 
 
 
-
+    // Pass captured image to the image View
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
@@ -210,6 +211,7 @@ public class Camera extends ActionBarActivity {
 
         // Path of image
         imageFilePath=getRealPathFromURI(tempUri);
+        // Image name formation
         imageFileName = FilenameUtils.removeExtension(imageFilePath.substring(imageFilePath.lastIndexOf("/")+1));
         // CALL THIS METHOD TO GET THE ACTUAL PATH
         File finalFile = new File(getRealPathFromURI(tempUri));
@@ -241,14 +243,14 @@ public class Camera extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
+    // Getting image uri
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
     }
-
+    // Convert URI to path
     public String getRealPathFromURI(Uri uri) {
         Cursor cursor = getContentResolver().query(uri, null, null, null, null);
         cursor.moveToFirst();
