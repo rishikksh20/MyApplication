@@ -9,12 +9,18 @@ import android.os.Environment;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.view.animation.LinearInterpolator;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -29,6 +35,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by rishikesh on 4/1/16.
@@ -44,18 +52,12 @@ public class nodeDisplayActivity extends Activity {
     LinearLayout appLayout;
     ScrollView scrollView;
     ImageView imageV;
-
+    //Node nodes = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        scrollView = new ScrollView(this);
-
-        scrollView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-        appLayout = new LinearLayout(this);
-        appLayout.setOrientation(LinearLayout.VERTICAL);
-        appLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-
+        setContentView(R.layout.nodedisplayactivity);
 
 
 
@@ -74,29 +76,33 @@ public class nodeDisplayActivity extends Activity {
 
         // Get elements by name employee
         NodeList nodeList = doc.getElementsByTagName(NODE_EMP);
-
+        List<String>images= new ArrayList<String>();
+        //List<Node> nodesItems = new ArrayList<Node>();
             /*
              * for each <employee> element get text of name, salary and
              * designation
              */
         // Here, we have only one <employee> element
         for (int i = 0; i < nodeList.getLength(); i++) {
-
+            //nodes=new Node();
             Element e = (Element) nodeList.item(i);
-            bp= BitmapFactory.decodeFile(parser.getValue(e, NODE_NAME));
-            imageV = new ImageView(this);
-            imageV.setAdjustViewBounds(true);
-            imageV.setImageBitmap(bp);
+           // nodes.setImage(parser.getValue(e, NODE_NAME));
+           // nodes.setAudio(parser.getValue(e, NODE_AUDIO));
+           // nodesItems.add(nodes);
+           // images[i] =parser.getValue(e, NODE_NAME);
+            images.add(parser.getValue(e, NODE_NAME).toString());
 
-
-
-            appLayout.addView(imageV);
 
 
         }
+        //ListAdapter nodeAdapter = new CustomAdapter(this,images);
+        ListAdapter nodeAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_2,images);
+        ListView nodeListView = (ListView) findViewById(R.id.listView);
+        nodeListView.setAdapter(nodeAdapter);
 
-        scrollView.addView(appLayout);
-        setContentView(scrollView);
+
+
+
 
     }
 
