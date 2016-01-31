@@ -45,14 +45,14 @@ public class nodeDisplayActivity extends Activity {
     // XML node names
     static final String NODE_EMP = "node";
     static final String NODE_NAME = "image";
-    static final String NODE_SALARY = "audio";
+    static final String NODE_AUDIO = "audio";
     String root=null;
     File xmlFile=null;
     Bitmap bp;
     LinearLayout appLayout;
     ScrollView scrollView;
     ImageView imageV;
-    //Node nodes = null;
+    Node nodes = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,29 +76,40 @@ public class nodeDisplayActivity extends Activity {
 
         // Get elements by name employee
         NodeList nodeList = doc.getElementsByTagName(NODE_EMP);
-        List<String>images= new ArrayList<String>();
-        //List<Node> nodesItems = new ArrayList<Node>();
-            /*
-             * for each <employee> element get text of name, salary and
-             * designation
-             */
-        // Here, we have only one <employee> element
+        //List<String>images= new ArrayList<String>();
+        List<Node> nodesItems = new ArrayList<Node>();
+
+
         for (int i = 0; i < nodeList.getLength(); i++) {
-            //nodes=new Node();
+            nodes=new Node();
             Element e = (Element) nodeList.item(i);
-           // nodes.setImage(parser.getValue(e, NODE_NAME));
-           // nodes.setAudio(parser.getValue(e, NODE_AUDIO));
-           // nodesItems.add(nodes);
+            nodes.setImage(parser.getValue(e, NODE_NAME));
+            nodes.setAudio(parser.getValue(e, NODE_AUDIO));
+            nodesItems.add(nodes);
            // images[i] =parser.getValue(e, NODE_NAME);
-            images.add(parser.getValue(e, NODE_NAME).toString());
+           // images.add(parser.getValue(e, NODE_NAME));
 
 
 
         }
-        //ListAdapter nodeAdapter = new CustomAdapter(this,images);
-        ListAdapter nodeAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_2,images);
-        ListView nodeListView = (ListView) findViewById(R.id.listView);
+        ListAdapter nodeAdapter = new CustomAdapter(this, nodesItems);
+        final ListView nodeListView = (ListView) findViewById(R.id.listView);
         nodeListView.setAdapter(nodeAdapter);
+
+        nodeListView.setOnItemClickListener(
+                new AdapterView.OnItemClickListener(){
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Node nodeItem = (Node) (nodeListView.getItemAtPosition(position));
+                        Toast.makeText(nodeDisplayActivity.this, nodeItem.getImage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+
+
+        );
+
+
 
 
 
