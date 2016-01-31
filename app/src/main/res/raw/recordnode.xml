@@ -1,3 +1,6 @@
 <nodes>
-
+ <node>
+     <image>my.jpg</image>
+     <audio>my.mp3</audio>
+ </node>
 </nodes>

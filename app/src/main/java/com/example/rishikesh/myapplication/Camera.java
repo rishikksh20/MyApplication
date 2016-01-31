@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -26,14 +27,26 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 public class Camera extends ActionBarActivity {
     Button b1,record,b3,play,stop;
@@ -41,12 +54,36 @@ public class Camera extends ActionBarActivity {
     private MediaRecorder myAudioRecorder;
     private String outputFile = null;
     MediaPlayer mPlayer;
+    String root=null;
+    String timeStamp;
+    File imageDir;
+    File image;
+    File xmlFile = null;
+    DocumentBuilder documentBuilder = null;
+    Document document=null;
+    String xmlData = "<nodes> \n </nodes>";
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
     private String imageFilePath=null;
     private String imageFileName=null;
+    Bitmap bp ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cameralayout);
+        // Creating External Folders for my files
+
+        root = Environment.getExternalStorageDirectory().toString();
+        final File myDir = new File(root + "/MyApp");
+        if(!myDir.exists())
+            myDir.mkdirs();
+        imageDir = new File(root + "/MyApp/images");
+        if(!imageDir.exists())
+            imageDir.mkdirs();
+        final File audioDir = new File(root + "/MyApp/audio");
+        if(!audioDir.exists())
+            audioDir.mkdirs();
+
+
 
         b1=(Button)findViewById(R.id.button);
         iv=(ImageView)findViewById(R.id.imageView);
@@ -55,7 +92,15 @@ public class Camera extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                imageFileName= "myApp" + timeStamp ;
+                image = new File(imageDir,imageFileName+".jpg" );
+                Uri uriSavedImage = Uri.fromFile(image);
+                imageFilePath= image.getAbsolutePath();
+
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
                 startActivityForResult(intent, 0);
+
             }
         });
 
@@ -82,7 +127,7 @@ public class Camera extends ActionBarActivity {
 
                 try {
 
-                    outputFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"+imageFileName+".3gp";
+                    outputFile = audioDir.getAbsolutePath() + "/"+imageFileName+".3gp";
                     myAudioRecorder.setOutputFile(outputFile);
                     myAudioRecorder.prepare();
                     myAudioRecorder.start();
@@ -154,9 +199,30 @@ public class Camera extends ActionBarActivity {
             public void onClick(View v) {
 
                 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder documentBuilder = null;
-                Document document=null;
-                InputStream is = getResources().openRawResource(R.raw.recordnode);
+                xmlFile = new File(root,"/MyApp/imageAudioMap.xml");
+                if(! xmlFile.exists()) {
+                    try {
+                        xmlFile.createNewFile();
+                        FileOutputStream fos =new FileOutputStream(xmlFile);
+                        fos.write(xmlData.getBytes());
+                        fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+                 InputStream is=null;
+
+                    try {
+                        is = new BufferedInputStream(new FileInputStream(xmlFile));
+                    }catch(FileNotFoundException e){
+
+                    }
+                    finally {
+
+                        }
+
                 try {
                     documentBuilder = documentBuilderFactory.newDocumentBuilder();
                     document= documentBuilder.parse(is);
@@ -170,7 +236,7 @@ public class Camera extends ActionBarActivity {
                 Element root = document.getDocumentElement();
                 // server elements
                 Element newNode = document.createElement("node");
-
+                newNode.setAttribute("id",imageFileName);
                 Element imagePath = document.createElement("image");
                 imagePath.appendChild(document.createTextNode(imageFilePath));
                 newNode.appendChild(imagePath);
@@ -180,6 +246,20 @@ public class Camera extends ActionBarActivity {
                 newNode.appendChild(audioPath);
 
                 root.appendChild(newNode);
+
+                // write the content into xml file
+                try {
+                TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                Transformer transformer = transformerFactory.newTransformer();
+                DOMSource source = new DOMSource(document);
+                StreamResult result = new StreamResult(xmlFile);
+
+                    transformer.transform(source, result);
+                } catch (TransformerException e) {
+                    e.printStackTrace();
+                }
+
+
                 Toast.makeText(getApplicationContext(), "Save successfully",Toast.LENGTH_LONG).show();
                 Toast.makeText(getApplicationContext(),outputFile+" : "+imageFilePath,Toast.LENGTH_LONG).show();
                 System.out.print("-------------------#####################" + imageFilePath + " : " + outputFile);
@@ -187,6 +267,12 @@ public class Camera extends ActionBarActivity {
                 b3.setEnabled(false);
                 Intent intent = new Intent(v.getContext(), nodeDisplayActivity.class);
                 startActivity(intent);
+
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
 
             }
@@ -201,18 +287,11 @@ public class Camera extends ActionBarActivity {
         // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
 
-        Bitmap bp = (Bitmap) data.getExtras().get("data");
+        //Bitmap bp = (Bitmap) data.getExtras().get("data");
+
+        bp= BitmapFactory.decodeFile(image.getAbsolutePath());
 
         iv.setImageBitmap(bp);
-
-        // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
-        Uri tempUri = getImageUri(getApplicationContext(), bp);
-
-        // Path of image
-        imageFilePath=getRealPathFromURI(tempUri);
-        imageFileName = FilenameUtils.removeExtension(imageFilePath.substring(imageFilePath.lastIndexOf("/")+1));
-        // CALL THIS METHOD TO GET THE ACTUAL PATH
-        File finalFile = new File(getRealPathFromURI(tempUri));
     }
 
     @Override
@@ -242,19 +321,7 @@ public class Camera extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
-    }
 
-    public String getRealPathFromURI(Uri uri) {
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-        cursor.moveToFirst();
-        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-        return cursor.getString(idx);
-    }
 
     // Save filename in the xml file
 
