@@ -1,6 +1,7 @@
 package com.example.rishikesh.myapplication;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -53,7 +54,7 @@ public class nodeDisplayActivity extends Activity {
     ScrollView scrollView;
     ImageView imageV;
     Node nodes = null;
-
+    Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,7 +102,10 @@ public class nodeDisplayActivity extends Activity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Node nodeItem = (Node) (nodeListView.getItemAtPosition(position));
-                        Toast.makeText(nodeDisplayActivity.this, nodeItem.getImage(), Toast.LENGTH_SHORT).show();
+                        intent = new Intent(view.getContext(), ImageShow.class);
+                        intent.putExtra("imageURL", nodeItem.getImage());
+                        intent.putExtra("audioURL", nodeItem.getAudio());
+                        startActivity(intent);
                     }
                 }
 
