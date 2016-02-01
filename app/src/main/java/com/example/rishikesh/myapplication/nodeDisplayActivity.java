@@ -1,5 +1,6 @@
 package com.example.rishikesh.myapplication;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -7,9 +8,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
@@ -42,11 +47,12 @@ import java.util.List;
 /**
  * Created by rishikesh on 4/1/16.
  */
-public class nodeDisplayActivity extends Activity {
+public class nodeDisplayActivity extends ActionBarActivity {
     // XML node names
-    static final String NODE_EMP = "node";
-    static final String NODE_NAME = "image";
+    static final String NODE = "node";
+    static final String NODE_IMAGE = "image";
     static final String NODE_AUDIO = "audio";
+
     String root=null;
     File xmlFile=null;
     Bitmap bp;
@@ -55,13 +61,19 @@ public class nodeDisplayActivity extends Activity {
     ImageView imageV;
     Node nodes = null;
     Intent intent;
+    ListView nodeListView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.nodedisplayactivity);
 
+        ActionBar actionBar = getActionBar();
+        if(null != actionBar) {
+            actionBar.hide();
 
-
+            actionBar.show();
+            actionBar.setTitle("My Application");
+        }
         root = Environment.getExternalStorageDirectory().toString();
         final File myDir = new File(root + "/MyApp");
         xmlFile = new File(root,"/MyApp/imageAudioMap.xml");
@@ -76,7 +88,7 @@ public class nodeDisplayActivity extends Activity {
         Document doc = parser.getDocument(stream);
 
         // Get elements by name employee
-        NodeList nodeList = doc.getElementsByTagName(NODE_EMP);
+        NodeList nodeList = doc.getElementsByTagName(NODE);
         //List<String>images= new ArrayList<String>();
         List<Node> nodesItems = new ArrayList<Node>();
 
@@ -84,7 +96,7 @@ public class nodeDisplayActivity extends Activity {
         for (int i = 0; i < nodeList.getLength(); i++) {
             nodes=new Node();
             Element e = (Element) nodeList.item(i);
-            nodes.setImage(parser.getValue(e, NODE_NAME));
+            nodes.setImage(parser.getValue(e, NODE_IMAGE));
             nodes.setAudio(parser.getValue(e, NODE_AUDIO));
             nodesItems.add(nodes);
            // images[i] =parser.getValue(e, NODE_NAME);
@@ -94,7 +106,7 @@ public class nodeDisplayActivity extends Activity {
 
         }
         ListAdapter nodeAdapter = new CustomAdapter(this, nodesItems);
-        final ListView nodeListView = (ListView) findViewById(R.id.listView);
+        nodeListView = (ListView) findViewById(R.id.listView);
         nodeListView.setAdapter(nodeAdapter);
 
         nodeListView.setOnItemClickListener(
@@ -113,19 +125,29 @@ public class nodeDisplayActivity extends Activity {
 
         );
 
-
-
-
-
-
-
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-
-        return true;
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_main,menu);
+        return super.onCreateOptionsMenu(menu);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch(item.getItemId())
+        {
+            case R.id.action_favorite:
+                Intent intent = new Intent(this, Camera.class);
+                startActivity(intent);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
 }

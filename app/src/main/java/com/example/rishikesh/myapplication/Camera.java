@@ -94,7 +94,7 @@ public class Camera extends ActionBarActivity {
                 Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                 imageFileName= "myApp" + timeStamp ;
-                image = new File(imageDir,imageFileName+".jpg" );
+                image = new File(imageDir,imageFileName+".png" );
                 Uri uriSavedImage = Uri.fromFile(image);
                 imageFilePath= image.getAbsolutePath();
 
@@ -127,7 +127,7 @@ public class Camera extends ActionBarActivity {
 
                 try {
 
-                    outputFile = audioDir.getAbsolutePath() + "/"+imageFileName+".3gp";
+                    outputFile = audioDir.getAbsolutePath() + "/"+imageFileName+".mp3";
                     myAudioRecorder.setOutputFile(outputFile);
                     myAudioRecorder.prepare();
                     myAudioRecorder.start();

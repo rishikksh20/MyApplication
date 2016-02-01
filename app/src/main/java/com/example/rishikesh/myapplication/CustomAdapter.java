@@ -39,19 +39,7 @@ public class CustomAdapter extends ArrayAdapter<Node> {
         iv.setImageBitmap(bp);
         return customView;
     }
-    // One method to scale down bitmap
-    public static Bitmap scaleDown(Bitmap realImage, float maxImageSize,
-                                   boolean filter) {
-        float ratio = Math.min(
-                (float) maxImageSize / realImage.getWidth(),
-                (float) maxImageSize / realImage.getHeight());
-        int width = Math.round((float) ratio * realImage.getWidth());
-        int height = Math.round((float) ratio * realImage.getHeight());
 
-        Bitmap newBitmap = Bitmap.createScaledBitmap(realImage, width,
-                height, filter);
-        return newBitmap;
-    }
     // Another methos to scale down bitmap
     public static Bitmap scaleBitmap(Bitmap bitmap, int wantedWidth, int wantedHeight) {
         Bitmap output = Bitmap.createBitmap(wantedWidth, wantedHeight, Bitmap.Config.ARGB_8888);
