@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -76,54 +77,64 @@ public class nodeDisplayActivity extends ActionBarActivity {
         }
         root = Environment.getExternalStorageDirectory().toString();
         final File myDir = new File(root + "/MyApp");
+
+
         xmlFile = new File(root,"/MyApp/imageAudioMap.xml");
         String idValue;
-        XMLDOMParser parser = new XMLDOMParser();
-        InputStream stream=null;
-        try {
-            stream = new BufferedInputStream(new FileInputStream(xmlFile));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        Document doc = parser.getDocument(stream);
+        if(xmlFile.exists()) {
+            XMLDOMParser parser = new XMLDOMParser();
+            InputStream stream = null;
+            try {
+                stream = new BufferedInputStream(new FileInputStream(xmlFile));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            Document doc = parser.getDocument(stream);
 
-        // Get elements by name employee
-        NodeList nodeList = doc.getElementsByTagName(NODE);
-        //List<String>images= new ArrayList<String>();
-        List<Node> nodesItems = new ArrayList<Node>();
-
-
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            nodes=new Node();
-            Element e = (Element) nodeList.item(i);
-            nodes.setImage(parser.getValue(e, NODE_IMAGE));
-            nodes.setAudio(parser.getValue(e, NODE_AUDIO));
-            nodesItems.add(nodes);
-           // images[i] =parser.getValue(e, NODE_NAME);
-           // images.add(parser.getValue(e, NODE_NAME));
+            // Get elements by name employee
+            NodeList nodeList = doc.getElementsByTagName(NODE);
+            //List<String>images= new ArrayList<String>();
+            List<Node> nodesItems = new ArrayList<Node>();
 
 
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                nodes = new Node();
+                Element e = (Element) nodeList.item(i);
+                nodes.setImage(parser.getValue(e, NODE_IMAGE));
+                nodes.setAudio(parser.getValue(e, NODE_AUDIO));
+                nodesItems.add(nodes);
+            }
+            ListAdapter nodeAdapter = new CustomAdapter(this, nodesItems);
+            nodeListView = (ListView) findViewById(R.id.listView);
+            nodeListView.setAdapter(nodeAdapter);
 
-        }
-        ListAdapter nodeAdapter = new CustomAdapter(this, nodesItems);
-        nodeListView = (ListView) findViewById(R.id.listView);
-        nodeListView.setAdapter(nodeAdapter);
-
-        nodeListView.setOnItemClickListener(
-                new AdapterView.OnItemClickListener(){
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Node nodeItem = (Node) (nodeListView.getItemAtPosition(position));
-                        intent = new Intent(view.getContext(), ImageShow.class);
-                        intent.putExtra("imageURL", nodeItem.getImage());
-                        intent.putExtra("audioURL", nodeItem.getAudio());
-                        startActivity(intent);
+            nodeListView.setOnItemClickListener(
+                    new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Node nodeItem = (Node) (nodeListView.getItemAtPosition(position));
+                            intent = new Intent(view.getContext(), ImageShow.class);
+                            intent.putExtra("imageURL", nodeItem.getImage());
+                            intent.putExtra("audioURL", nodeItem.getAudio());
+                            startActivity(intent);
+                        }
                     }
-                }
 
 
+            );
+        } else
+        {
+            LinearLayout linearLayout = (LinearLayout)findViewById(R.id.linearLayout);
+            Button btn = new Button(this);
+            btn.setText("Start");
+            linearLayout.addView(
+                    btn,
+                    new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.MATCH_PARENT)
+            );
 
-        );
+        }
 
     }
 
