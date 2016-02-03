@@ -13,7 +13,7 @@ Xml file structure is like this:
 ```
 <nodes>
 
-  <node>
+  <node id="node_id">
     <image>image-url</image>
     <audio>audio-url</audio>
   </node>
