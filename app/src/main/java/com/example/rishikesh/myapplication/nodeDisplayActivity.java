@@ -102,6 +102,7 @@ public class nodeDisplayActivity extends ActionBarActivity {
                 Element e = (Element) nodeList.item(i);
                 nodes.setImage(parser.getValue(e, NODE_IMAGE));
                 nodes.setAudio(parser.getValue(e, NODE_AUDIO));
+                nodes.setId(e.getAttribute("id"));
                 nodesItems.add(nodes);
             }
             ListAdapter nodeAdapter = new CustomAdapter(this, nodesItems);
@@ -116,6 +117,7 @@ public class nodeDisplayActivity extends ActionBarActivity {
                             intent = new Intent(view.getContext(), ImageShow.class);
                             intent.putExtra("imageURL", nodeItem.getImage());
                             intent.putExtra("audioURL", nodeItem.getAudio());
+                            intent.putExtra("id", nodeItem.getId());
                             startActivity(intent);
                         }
                     }
@@ -132,6 +134,17 @@ public class nodeDisplayActivity extends ActionBarActivity {
                     new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.MATCH_PARENT,
                             LinearLayout.LayoutParams.MATCH_PARENT)
+            );
+            btn.setOnClickListener(new View.OnClickListener() {
+                                       @Override
+                                       public void onClick(View v) {
+
+                                           Intent intent = new Intent(v.getContext(), Camera.class);
+                                           startActivity(intent);
+
+                                       }
+
+                                   }
             );
 
         }
