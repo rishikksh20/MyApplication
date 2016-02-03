@@ -1,10 +1,12 @@
 package com.example.rishikesh.myapplication;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Environment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -136,17 +139,33 @@ public class ImageShow extends AppCompatActivity {
                 startActivity(intent);
                 return true;
             case R.id.action_delete:
-                if (deleteNode(imageURL)) {
-                    Intent intent2 = new Intent(this, nodeDisplayActivity.class);
-                    startActivity(intent2);
-                }
+                AlertDialog.Builder a_builder = new AlertDialog.Builder(ImageShow.this);
+                a_builder.setMessage("Do you want to Delete this File !!!")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                deleteNode();
+                            }
+                        })
+                        .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        }) ;
+                AlertDialog alert = a_builder.create();
+                alert.setTitle("Delete Alert !!!");
+                alert.show();
+
+
                 return true;
 
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public boolean deleteNode(String url) {
+    public boolean deleteNode() {
         String root = Environment.getExternalStorageDirectory().toString();
         final File myDir = new File(root + "/MyApp");
 
@@ -190,9 +209,18 @@ public class ImageShow extends AppCompatActivity {
             }
             DOMSource source = new DOMSource(doc);
             StreamResult result = new StreamResult(xmlFile);
+            File imageFile = new File(imageURL);
+            File audioFile = new File(audioURL);
             try {
-                transformer.transform(source, result);
-                return true;
+                if(imageFile.delete() && audioFile.delete()) {
+                    transformer.transform(source, result);
+                    Intent intent2 = new Intent(this, nodeDisplayActivity.class);
+                    startActivity(intent2);
+                    return true;
+                }else
+                {
+                    Toast.makeText(getApplicationContext(), "Problem in deleting file !!!", Toast.LENGTH_LONG).show();
+                }
             } catch (TransformerException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
