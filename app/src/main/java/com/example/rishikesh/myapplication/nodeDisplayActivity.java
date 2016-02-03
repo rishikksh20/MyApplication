@@ -169,6 +169,9 @@ public class nodeDisplayActivity extends ActionBarActivity {
                 Intent intent = new Intent(this, Camera.class);
                 startActivity(intent);
                 return true;
+            case R.id.action_settings:
+                finish();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

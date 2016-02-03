@@ -24,7 +24,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".Camera"></activity>
+        <activity android:name=".Camera"
+            android:parentActivityName="com.example.rishikesh.myapplication.nodeDisplayActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.rishikesh.myapplication.nodeDisplayActivity" /></activity>
         <activity android:name=".nodeDisplayActivity">
 
             <!-- This activity handles "SEND" actions with text data -->
@@ -34,7 +39,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ImageShow"></activity>
+        <activity android:name=".ImageShow"
+            android:parentActivityName="com.example.rishikesh.myapplication.nodeDisplayActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.rishikesh.myapplication.nodeDisplayActivity" />
+        </activity>
     </application>
 
 </manifest>
