@@ -7,6 +7,16 @@ public class Node {
     private String image;
     private String audio;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    private String id;
+
     public String getImage() {
         return image;
     }
