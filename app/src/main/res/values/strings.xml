@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Speaking Snap</string>
     <string name="action_settings">Settings</string>
     <string name="action_exit">Close</string>
     <string name="action_favorite">Camera</string>
