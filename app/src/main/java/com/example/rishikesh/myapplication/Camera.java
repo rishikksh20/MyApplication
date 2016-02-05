@@ -3,7 +3,9 @@ package com.example.rishikesh.myapplication;
 /**
  * Created by rishikesh on 4/1/16.
  */
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -14,6 +16,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -49,54 +53,57 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 public class Camera extends ActionBarActivity {
-    Button b1,record,b3,play,stop;
+    Button b1, record, b3, play, stop;
     ImageView iv;
     private MediaRecorder myAudioRecorder;
     private String outputFile = null;
     MediaPlayer mPlayer;
-    String root=null;
+    String root = null;
     String timeStamp;
     File imageDir;
     File image;
     File xmlFile = null;
     DocumentBuilder documentBuilder = null;
-    Document document=null;
+    Document document = null;
     String xmlData = "<nodes> \n </nodes>";
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
-    private String imageFilePath=null;
-    private String imageFileName=null;
-    Bitmap bp ;
+    private String imageFilePath = null;
+    private String imageFileName = null;
+    Bitmap bp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cameralayout);
         // Creating External Folders for my files
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.ic_launcher);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
         root = Environment.getExternalStorageDirectory().toString();
         final File myDir = new File(root + "/MyApp");
-        if(!myDir.exists())
+        if (!myDir.exists())
             myDir.mkdirs();
         imageDir = new File(root + "/MyApp/images");
-        if(!imageDir.exists())
+        if (!imageDir.exists())
             imageDir.mkdirs();
         final File audioDir = new File(root + "/MyApp/audio");
-        if(!audioDir.exists())
+        if (!audioDir.exists())
             audioDir.mkdirs();
 
 
-
-        b1=(Button)findViewById(R.id.button);
-        iv=(ImageView)findViewById(R.id.imageView);
+        b1 = (Button) findViewById(R.id.button);
+        iv = (ImageView) findViewById(R.id.imageView);
 
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                imageFileName= "myApp" + timeStamp ;
-                image = new File(imageDir,imageFileName+".png" );
+                imageFileName = "myApp" + timeStamp;
+                image = new File(imageDir, imageFileName + ".png");
                 Uri uriSavedImage = Uri.fromFile(image);
-                imageFilePath= image.getAbsolutePath();
+                imageFilePath = image.getAbsolutePath();
 
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
                 startActivityForResult(intent, 0);
@@ -104,17 +111,17 @@ public class Camera extends ActionBarActivity {
             }
         });
 
-        b3=(Button)findViewById(R.id.button3);
+        b3 = (Button) findViewById(R.id.button3);
         b3.setEnabled(false);
-        record=(Button)findViewById(R.id.button2);
-        play=(Button)findViewById(R.id.button4);
-        stop=(Button)findViewById(R.id.button5);
+        record = (Button) findViewById(R.id.button2);
+        play = (Button) findViewById(R.id.button4);
+        stop = (Button) findViewById(R.id.button5);
 
         stop.setEnabled(false);
         play.setEnabled(false);
 
 
-        myAudioRecorder=new MediaRecorder();
+        myAudioRecorder = new MediaRecorder();
         myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         myAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         myAudioRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
@@ -127,18 +134,14 @@ public class Camera extends ActionBarActivity {
 
                 try {
 
-                    outputFile = audioDir.getAbsolutePath() + "/"+imageFileName+".mp3";
+                    outputFile = audioDir.getAbsolutePath() + "/" + imageFileName + ".mp3";
                     myAudioRecorder.setOutputFile(outputFile);
                     myAudioRecorder.prepare();
                     myAudioRecorder.start();
-                }
-
-                catch (IllegalStateException e) {
+                } catch (IllegalStateException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
-                }
-
-                catch (IOException e) {
+                } catch (IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
@@ -154,44 +157,40 @@ public class Camera extends ActionBarActivity {
             @Override
             public void onClick(View v) {
 
-                   myAudioRecorder.stop();
-                   myAudioRecorder.release();
-                   myAudioRecorder = null;
+                myAudioRecorder.stop();
+                myAudioRecorder.release();
+                myAudioRecorder = null;
 
-                   stop.setEnabled(false);
-                   play.setEnabled(true);
+                stop.setEnabled(false);
+                play.setEnabled(true);
 
 
-                Toast.makeText(getApplicationContext(), "Audio recorded successfully",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Audio recorded successfully", Toast.LENGTH_LONG).show();
             }
         });
 
         play.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) throws IllegalArgumentException,SecurityException,IllegalStateException {
+            public void onClick(View v) throws IllegalArgumentException, SecurityException, IllegalStateException {
                 mPlayer = new MediaPlayer();
 
                 try {
                     mPlayer.setDataSource(outputFile);
-                }
-
-                catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
 
                 try {
                     mPlayer.prepare();
-                }
-
-                catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
 
                 mPlayer.start();
+
                 Toast.makeText(getApplicationContext(), "Playing audio", Toast.LENGTH_LONG).show();
             }
         });
-
 
 
         b3.setOnClickListener(new View.OnClickListener() {
@@ -199,11 +198,11 @@ public class Camera extends ActionBarActivity {
             public void onClick(View v) {
 
                 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-                xmlFile = new File(root,"/MyApp/imageAudioMap.xml");
-                if(! xmlFile.exists()) {
+                xmlFile = new File(root, "/MyApp/imageAudioMap.xml");
+                if (!xmlFile.exists()) {
                     try {
                         xmlFile.createNewFile();
-                        FileOutputStream fos =new FileOutputStream(xmlFile);
+                        FileOutputStream fos = new FileOutputStream(xmlFile);
                         fos.write(xmlData.getBytes());
                         fos.close();
                     } catch (IOException e) {
@@ -212,20 +211,19 @@ public class Camera extends ActionBarActivity {
 
 
                 }
-                 InputStream is=null;
+                InputStream is = null;
 
-                    try {
-                        is = new BufferedInputStream(new FileInputStream(xmlFile));
-                    }catch(FileNotFoundException e){
+                try {
+                    is = new BufferedInputStream(new FileInputStream(xmlFile));
+                } catch (FileNotFoundException e) {
 
-                    }
-                    finally {
+                } finally {
 
-                        }
+                }
 
                 try {
                     documentBuilder = documentBuilderFactory.newDocumentBuilder();
-                    document= documentBuilder.parse(is);
+                    document = documentBuilder.parse(is);
                 } catch (ParserConfigurationException e) {
                     e.printStackTrace();
                 } catch (SAXException e) {
@@ -236,7 +234,7 @@ public class Camera extends ActionBarActivity {
                 Element root = document.getDocumentElement();
                 // server elements
                 Element newNode = document.createElement("node");
-                newNode.setAttribute("id",imageFileName);
+                newNode.setAttribute("id", imageFileName);
                 Element imagePath = document.createElement("image");
                 imagePath.appendChild(document.createTextNode(imageFilePath));
                 newNode.appendChild(imagePath);
@@ -249,10 +247,10 @@ public class Camera extends ActionBarActivity {
 
                 // write the content into xml file
                 try {
-                TransformerFactory transformerFactory = TransformerFactory.newInstance();
-                Transformer transformer = transformerFactory.newTransformer();
-                DOMSource source = new DOMSource(document);
-                StreamResult result = new StreamResult(xmlFile);
+                    TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                    Transformer transformer = transformerFactory.newTransformer();
+                    DOMSource source = new DOMSource(document);
+                    StreamResult result = new StreamResult(xmlFile);
 
                     transformer.transform(source, result);
                 } catch (TransformerException e) {
@@ -260,8 +258,8 @@ public class Camera extends ActionBarActivity {
                 }
 
 
-                Toast.makeText(getApplicationContext(), "Save successfully",Toast.LENGTH_LONG).show();
-                Toast.makeText(getApplicationContext(),outputFile+" : "+imageFilePath,Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Save successfully", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), outputFile + " : " + imageFilePath, Toast.LENGTH_LONG).show();
                 System.out.print("-------------------#####################" + imageFilePath + " : " + outputFile);
                 record.setEnabled(true);
                 b3.setEnabled(false);
@@ -281,15 +279,13 @@ public class Camera extends ActionBarActivity {
     }
 
 
-
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
 
         //Bitmap bp = (Bitmap) data.getExtras().get("data");
 
-        bp= BitmapFactory.decodeFile(image.getAbsolutePath());
+        bp = BitmapFactory.decodeFile(image.getAbsolutePath());
 
         iv.setImageBitmap(bp);
     }
@@ -316,10 +312,61 @@ public class Camera extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setTitle("Exit Application?");
+            alertDialogBuilder
+                    .setMessage("Click yes to exit!")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    moveTaskToBack(true);
+                                    android.os.Process.killProcess(android.os.Process.myPid());
+                                    System.exit(1);
+                                }
+                            })
+
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                            dialog.cancel();
+                        }
+                    });
+
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
             return true;
+        }
+        if(id == android.R.id.home)
+
+        {
+            finish();
+           /* Intent upIntent = NavUtils.getParentActivityIntent(this);
+            if (NavUtils.shouldUpRecreateTask(this, upIntent))
+
+            {
+                // This activity is NOT part of this app's task, so create a new task
+                // when navigating up, with a synthesized back stack.
+                TaskStackBuilder.create(this)
+                        // Add all of this activity's parents to the back stack
+                        .addNextIntentWithParentStack(upIntent)
+                                // Navigate up to the closest parent
+                        .startActivities();
+            } else
+
+            {
+                // This activity is part of this app's task, so simply
+                // navigate up to the logical parent activity.
+                NavUtils.navigateUpTo(this, upIntent);
+            }*/
+            return true;
+
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+
 
 
 

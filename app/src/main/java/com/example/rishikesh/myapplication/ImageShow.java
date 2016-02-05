@@ -50,8 +50,12 @@ public class ImageShow extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.ic_launcher);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+
         setContentView(R.layout.activity_image_show);
         showImage = (ImageView) findViewById(R.id.showImage);
         play = (Button) findViewById(R.id.playButton);
@@ -165,7 +169,8 @@ public class ImageShow extends AppCompatActivity {
 
                 return true;
             case android.R.id.home:
-                Intent upIntent = NavUtils.getParentActivityIntent(this);
+                finish();
+              /*  Intent upIntent = NavUtils.getParentActivityIntent(this);
                 if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
                     // This activity is NOT part of this app's task, so create a new task
                     // when navigating up, with a synthesized back stack.
@@ -178,10 +183,32 @@ public class ImageShow extends AppCompatActivity {
                     // This activity is part of this app's task, so simply
                     // navigate up to the logical parent activity.
                     NavUtils.navigateUpTo(this, upIntent);
-                }
+                }*/
                 return true;
             case R.id.action_settings:
-                finish();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(this);
+                alertDialogBuilder.setTitle("Exit Application?");
+                alertDialogBuilder
+                        .setMessage("Click yes to exit!")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        moveTaskToBack(true);
+                                        android.os.Process.killProcess(android.os.Process.myPid());
+                                        System.exit(1);
+                                    }
+                                })
+
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                                dialog.cancel();
+                            }
+                        });
+
+                android.app.AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
                 return true;
 
         }

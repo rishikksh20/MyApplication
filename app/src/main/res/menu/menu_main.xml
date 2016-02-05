@@ -5,7 +5,7 @@
 
         <item
             android:id="@+id/action_favorite"
-            android:icon="@drawable/ic_camera_enhance_black_24dp"
+            android:icon="@drawable/ic_camera_enhance_white_24dp"
             android:title="@string/action_favorite"
             app:showAsAction="ifRoom"/>
 

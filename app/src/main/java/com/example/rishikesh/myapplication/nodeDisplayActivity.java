@@ -2,6 +2,8 @@ package com.example.rishikesh.myapplication;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -74,7 +76,10 @@ public class nodeDisplayActivity extends ActionBarActivity {
 
             actionBar.show();
             actionBar.setTitle("My Application");
+
         }
+        getSupportActionBar().setLogo(R.drawable.ic_launcher);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
         root = Environment.getExternalStorageDirectory().toString();
         final File myDir = new File(root + "/MyApp");
 
@@ -170,7 +175,29 @@ public class nodeDisplayActivity extends ActionBarActivity {
                 startActivity(intent);
                 return true;
             case R.id.action_settings:
-                finish();
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                alertDialogBuilder.setTitle("Exit Application?");
+                alertDialogBuilder
+                        .setMessage("Click yes to exit!")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        moveTaskToBack(true);
+                                        android.os.Process.killProcess(android.os.Process.myPid());
+                                        System.exit(1);
+                                    }
+                                })
+
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
                 return true;
         }
         return super.onOptionsItemSelected(item);

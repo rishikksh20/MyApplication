@@ -24,27 +24,39 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".Camera"
-            android:parentActivityName="com.example.rishikesh.myapplication.nodeDisplayActivity" >
+        <activity
+            android:name=".Camera"
+            android:parentActivityName=".nodeDisplayActivity">
+
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.rishikesh.myapplication.nodeDisplayActivity" /></activity>
+                android:value="com.example.rishikesh.myapplication.nodeDisplayActivity" />
+        </activity>
         <activity android:name=".nodeDisplayActivity">
 
+
+        </activity>
+        <activity
+            android:name=".ImageShow"
+            android:parentActivityName=".nodeDisplayActivity">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.rishikesh.myapplication.nodeDisplayActivity" />
+        </activity>
+        <activity
+            android:name=".SplashScreen"
+            android:label="@string/title_activity_splash_screen"
+            android:theme="@style/AppTheme.NoActionBar">
             <!-- This activity handles "SEND" actions with text data -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".ImageShow"
-            android:parentActivityName="com.example.rishikesh.myapplication.nodeDisplayActivity" >
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.rishikesh.myapplication.nodeDisplayActivity" />
+
         </activity>
     </application>
 
