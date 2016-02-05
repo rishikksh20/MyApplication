@@ -53,8 +53,8 @@ public class ImageShow extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setLogo(R.drawable.ic_launcher);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        //getSupportActionBar().setLogo(R.drawable.ic_launcher);
+        //getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         setContentView(R.layout.activity_image_show);
         showImage = (ImageView) findViewById(R.id.showImage);

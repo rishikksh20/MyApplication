@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -50,7 +51,7 @@ import java.util.List;
 /**
  * Created by rishikesh on 4/1/16.
  */
-public class nodeDisplayActivity extends ActionBarActivity {
+public class nodeDisplayActivity extends AppCompatActivity {
     // XML node names
     static final String NODE = "node";
     static final String NODE_IMAGE = "image";
@@ -70,16 +71,8 @@ public class nodeDisplayActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.nodedisplayactivity);
 
-        ActionBar actionBar = getActionBar();
-        if(null != actionBar) {
-            actionBar.hide();
 
-            actionBar.show();
-            actionBar.setTitle("My Application");
-
-        }
-        getSupportActionBar().setLogo(R.drawable.ic_launcher);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().show();
         root = Environment.getExternalStorageDirectory().toString();
         final File myDir = new File(root + "/MyApp");
 

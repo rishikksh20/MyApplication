@@ -78,8 +78,7 @@ public class Camera extends ActionBarActivity {
         // Creating External Folders for my files
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setLogo(R.drawable.ic_launcher);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
+
         root = Environment.getExternalStorageDirectory().toString();
         final File myDir = new File(root + "/MyApp");
         if (!myDir.exists())
