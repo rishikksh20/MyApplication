@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.example.rishikesh.myapplication.SplashScreen"
+    android:weightSum="1"
+
+    android:layout_gravity="center">
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="90dp"
+        android:id="@+id/imageView3"
+        android:layout_gravity="center"
+        android:scaleType="fitCenter"
+        android:background="#0000"
+        android:src="@drawable/logo1"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>
