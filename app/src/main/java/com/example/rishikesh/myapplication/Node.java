@@ -6,6 +6,16 @@ package com.example.rishikesh.myapplication;
 public class Node {
     private String image;
     private String audio;
+    private String id;
+    private String category;
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
     public String getId() {
         return id;
@@ -15,7 +25,7 @@ public class Node {
         this.id = id;
     }
 
-    private String id;
+
 
     public String getImage() {
         return image;
