@@ -2,6 +2,7 @@ package com.example.rishikesh.myapplication;
 
 /**
  * Created by rishikesh on 4/1/16.
+ * Handle Capture Image and Record audio
  */
 import android.app.AlertDialog;
 import android.content.Context;
