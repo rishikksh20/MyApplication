@@ -283,7 +283,7 @@ public class Camera extends ActionBarActivity {
 
                         Toast.makeText(getApplicationContext(), "Save successfully", Toast.LENGTH_LONG).show();
                         Toast.makeText(getApplicationContext(), outputFile + " : " + imageFilePath, Toast.LENGTH_LONG).show();
-                        System.out.print("-------------------#####################" + imageFilePath + " : " + outputFile);
+
                         record.setEnabled(true);
                         save.setEnabled(false);
 
