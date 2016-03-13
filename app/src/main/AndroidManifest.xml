@@ -23,10 +23,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.rishikesh.myapplication.nodeDisplayActivity" />
         </activity>
-        <activity android:name=".nodeDisplayActivity">
-
-
-        </activity>
+        <activity android:name=".nodeDisplayActivity"
+                  android:theme="@style/AppTheme.NoActionBar"
+                  android:label="@string/title_activity_main"/>
         <activity
             android:name=".ImageShow"
             android:parentActivityName=".nodeDisplayActivity">
@@ -40,6 +39,7 @@
             android:name=".SplashScreen"
             android:label="@string/title_activity_splash_screen"
             android:theme="@style/AppTheme.NoActionBar">
+
             <!-- This activity handles "SEND" actions with text data -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,6 +48,17 @@
             </intent-filter>
 
         </activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBar">
+
+
+        </activity>
+        <activity
+            android:name=".ImageGridView"
+            android:label="@string/title_activity_image_grid_view"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

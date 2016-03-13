@@ -21,19 +21,19 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="play"
+            android:text="@string/play"
             android:id="@+id/playButton"
             android:layout_weight="0.57" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="pause"
+            android:text="@string/pause"
             android:id="@+id/pauseButton"
             />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="stop"
+            android:text="@string/stop"
             android:id="@+id/stopButton"
             android:layout_weight="0.29" />
     </LinearLayout>

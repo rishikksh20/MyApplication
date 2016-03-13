@@ -17,7 +17,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="camera"
+        android:text="@string/camera"
         android:id="@+id/button"
          />
 
@@ -30,26 +30,26 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Record"
+        android:text="@string/Record"
         android:id="@+id/button2"
         android:layout_weight="0.57" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="play"
+            android:text="@string/play"
             android:id="@+id/button4"
             />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="stop"
+            android:text="@string/stop"
             android:id="@+id/button5"
             android:layout_weight="0.29" />
     </LinearLayout>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="save"
+        android:text="@string/save"
         android:id="@+id/button3"
          />
 

@@ -10,7 +10,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
@@ -23,11 +27,13 @@ import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,30 +57,46 @@ import java.util.List;
 /**
  * Created by rishikesh on 4/1/16.
  */
-public class nodeDisplayActivity extends AppCompatActivity {
+public class nodeDisplayActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
     // XML node names
     static final String NODE = "node";
     static final String NODE_IMAGE = "image";
     static final String NODE_AUDIO = "audio";
-
+    static final String NODE_CATEGORY = "category";
     String root=null;
     File xmlFile=null;
     Bitmap bp;
+    String Category= "All";
     LinearLayout appLayout;
     ScrollView scrollView;
     ImageView imageV;
     Node nodes = null;
     Intent intent;
-    ListView nodeListView;
+    GridView nodeListView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.nodedisplayactivity);
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
 
-        getSupportActionBar().show();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
         root = Environment.getExternalStorageDirectory().toString();
         final File myDir = new File(root + "/MyApp");
+
+        Intent intentX = getIntent();
+        if (null != intentX) {
+            Category = intentX.getStringExtra("category");
+        }
 
 
         xmlFile = new File(root,"/MyApp/imageAudioMap.xml");
@@ -94,17 +116,32 @@ public class nodeDisplayActivity extends AppCompatActivity {
             //List<String>images= new ArrayList<String>();
             List<Node> nodesItems = new ArrayList<Node>();
 
+            if(!"All".equals(Category)) {
+                for (int i = 0; i < nodeList.getLength(); i++) {
+                    nodes = new Node();
+                    Element e = (Element) nodeList.item(i);
 
-            for (int i = 0; i < nodeList.getLength(); i++) {
-                nodes = new Node();
-                Element e = (Element) nodeList.item(i);
-                nodes.setImage(parser.getValue(e, NODE_IMAGE));
-                nodes.setAudio(parser.getValue(e, NODE_AUDIO));
-                nodes.setId(e.getAttribute("id"));
-                nodesItems.add(nodes);
+                    if (Category.equals(parser.getValue(e, NODE_CATEGORY))) {
+                        nodes.setImage(parser.getValue(e, NODE_IMAGE));
+                        nodes.setAudio(parser.getValue(e, NODE_AUDIO));
+                        nodes.setId(e.getAttribute("id"));
+                        nodesItems.add(nodes);
+                    }
+
+                }
+            }else {
+                for (int i = 0; i < nodeList.getLength(); i++) {
+                    nodes = new Node();
+                    Element e = (Element) nodeList.item(i);
+                    nodes.setImage(parser.getValue(e, NODE_IMAGE));
+                    nodes.setAudio(parser.getValue(e, NODE_AUDIO));
+                    nodes.setId(e.getAttribute("id"));
+                    nodesItems.add(nodes);
+
+                }
             }
             ListAdapter nodeAdapter = new CustomAdapter(this, nodesItems);
-            nodeListView = (ListView) findViewById(R.id.listView);
+            nodeListView = (GridView) findViewById(R.id.gridView);
             nodeListView.setAdapter(nodeAdapter);
 
             nodeListView.setOnItemClickListener(
@@ -124,7 +161,7 @@ public class nodeDisplayActivity extends AppCompatActivity {
             );
         } else
         {
-            LinearLayout linearLayout = (LinearLayout)findViewById(R.id.linearLayout);
+            RelativeLayout linearLayout = (RelativeLayout)findViewById(R.id.gridLayout);
             Button btn = new Button(this);
             btn.setText("Start");
             linearLayout.addView(
@@ -148,6 +185,17 @@ public class nodeDisplayActivity extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
 
 
     @Override
@@ -194,6 +242,32 @@ public class nodeDisplayActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+        Intent intent;
+        if (id == R.id.nav_gallery) {
+            if(!Category.equals("All")) {
+                intent = new Intent(this, nodeDisplayActivity.class);
+                intent.putExtra("category", "All");
+                startActivity(intent);
+            }
+            return true;
+
+        } else if (id == R.id.nav_category) {
+            intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            return  true;
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
 

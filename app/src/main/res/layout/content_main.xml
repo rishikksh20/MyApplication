@@ -7,13 +7,16 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:id="@+id/linearLayout"
-
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.rishikesh.myapplication.MainActivity"
+    tools:showIn="@layout/app_bar_main"
+    android:id="@+id/gridLayout"
     >
+
     <GridView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/listView"
+        android:id="@+id/gridView"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:columnWidth="@dimen/column_width"
@@ -22,5 +25,5 @@
         android:horizontalSpacing="@dimen/activity_horizontal_margin"
         android:stretchMode="columnWidth"
         android:gravity="center"
-        />
+         />
 </RelativeLayout>

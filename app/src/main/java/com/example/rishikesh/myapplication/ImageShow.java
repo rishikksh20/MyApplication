@@ -4,6 +4,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.os.Environment;
 import android.support.v4.app.NavUtils;
@@ -18,6 +21,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -68,9 +73,18 @@ public class ImageShow extends AppCompatActivity {
             id = intent.getStringExtra("id");
 
         }
-        Bitmap bp = BitmapFactory.decodeFile(imageURL);
-
-        showImage.setImageBitmap(bp);
+       /* Bitmap bp = BitmapFactory.decodeFile(imageURL);
+        int srcWidth = bp.getWidth();
+        int srcHeight = bp.getHeight();
+        int dstWidth = (int)(srcWidth*0.8f);
+        int dstHeight = (int)(srcHeight*0.8f);
+        bp = scaleBitmap(bp, dstWidth, dstHeight);
+        showImage.setImageBitmap(bp);*/
+        Picasso
+                .with(getApplicationContext())
+                .load(new File(imageURL))
+                .fit()
+                .into((ImageView) showImage);
         pause.setEnabled(false);
         stop.setEnabled(false);
         flag = false;
@@ -278,5 +292,15 @@ public class ImageShow extends AppCompatActivity {
 
         }
         return false;
+    }
+    // Another methos to scale down bitmap
+    public static Bitmap scaleBitmap(Bitmap bitmap, int wantedWidth, int wantedHeight) {
+        Bitmap output = Bitmap.createBitmap(wantedWidth, wantedHeight, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+        Matrix m = new Matrix();
+        m.setScale((float) wantedWidth / bitmap.getWidth(), (float) wantedHeight / bitmap.getHeight());
+        canvas.drawBitmap(bitmap, m, new Paint());
+
+        return output;
     }
 }
