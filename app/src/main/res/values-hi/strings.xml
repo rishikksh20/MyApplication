@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Speaking Snap</string>
+    <string name="action_settings">सेटिंग</string>
+    <string name="action_exit">बंद करे</string>
+    <string name="action_favorite">कैमरा</string>
+    <string name="title_activity_splash_screen">SplashScreen</string>
+    <string name="title_activity_main">Speaking Snap</string>
+    <string name="camera">कैमरा</string>
+    <string name="play">चलाएँ</string>
+    <string name="pause">विराम</string>
+    <string name="stop">समाप्त करना</string>
+    <string name="Record">Record</string>
+    <string name="save">संचय</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_image_grid_view">ImageGridView</string>
+</resources>
